@@ -1,27 +1,38 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-import os
+import time
 
-# Configurar para ignorar a verificação SSL
-os.environ['WDM_SSL_VERIFY'] = '0'
+# Caminho para o ChromeDriver
+chromedriver_path = "C:/Users/vitor/Downloads/chromedriver-win64/chromedriver.exe"
 
-# Configurar o ChromeOptions para usar o perfil
+# Configurar o ChromeOptions
 options = webdriver.ChromeOptions()
-options.add_argument("user-data-dir=C:\\Users\\23024522\\AppData\\Local\\Google\\Chrome\\User Data")  # Caminho para a pasta de dados do usuário
-options.add_argument("profile-directory=Lucca")  # Nome do diretório do perfil
+options.add_argument("--disable-extensions")
+options.add_argument("--disable-popup-blocking")
+options.add_argument("--start-maximized")
+options.add_argument("--disable-infobars")
+options.add_argument("--disable-notifications")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
-# Especificar o caminho do executável do Chrome (caso necessário)
-options.binary_location = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"  # Altere para o caminho do executável do Chrome no seu sistema
+# **Remova ou comente as linhas abaixo para não carregar o perfil**
+options.add_argument("user-data-dir=C:/Users/vitor/AppData/Local/Google/Chrome/User Data")
+options.add_argument("profile-directory=automacaofecap")  # Ou o nome do seu perfil
 
-# Inicializando o driver do Chrome com as opções configuradas
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+# Inicializar o driver
+driver = webdriver.Chrome(service=Service(chromedriver_path), options=options)
 
-# Abrindo uma página (exemplo: Google)
-driver.get("https://br.investing.com/")
+# Esperar o navegador iniciar
+time.sleep(5)
 
+# Tentar abrir o site
+try:
+    print("Tentando navegar para o site...")
+    driver.get("https://br.investing.com/")
+    print("Página carregada com sucesso.")
+except Exception as e:
+    print(f"Erro ao carregar a página: {e}")
+x
 # Manter o navegador aberto para visualização
 input("Pressione Enter para fechar o navegador...")
-
-# Fechar o navegador
 driver.quit()
