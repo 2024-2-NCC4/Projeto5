@@ -1,26 +1,25 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+import glob
 
-# Carregar os dados do CSV
-df = pd.read_csv('historico_AAPL.csv')  # Substitua pelo caminho correto do arquivo CSV
+# Caminho onde os arquivos CSV estão localizados
+caminho = 'Teste/*.csv'
 
-# Converter a coluna 'Data' para o tipo datetime, especificando que o dia vem primeiro
-df['Data'] = pd.to_datetime(df['Data'], dayfirst=True)
 
-# Definir a 'Data' como índice para facilitar a plotagem
-df.set_index('Data', inplace=True)
+# Usar glob para encontrar todos os arquivos CSV no diretório
+arquivos_csv = glob.glob(caminho)
 
-# Plotar o gráfico com o desempenho (Último)
-plt.figure(figsize=(10, 6))
+print(arquivos_csv)
 
-plt.plot(df.index, df['Último'], label='Último', linestyle='-', color='black')
+# Lista para armazenar os DataFrames
+dataframes = []
 
-# Personalizações do gráfico
-plt.title('Desempenho da Empresa na Bolsa')
-plt.xlabel('Data')
-plt.ylabel('Valor')
-plt.legend()
-plt.grid(True)
+# Ler cada arquivo e adicionar à lista
+for arquivo in arquivos_csv:
+    df = pd.read_csv(arquivo)
+    dataframes.append(df)
 
-# Exibir o gráfico
-plt.show()
+# Concatenar todos os DataFrames em um único DataFrame
+resultado = pd.concat(dataframes, ignore_index=True)
+
+# Salvar o resultado em um novo arquivo CSV
+resultado.to_csv('resultado_concatenado.csv', index=False)
