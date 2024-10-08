@@ -1,63 +1,75 @@
-import requests
+import yfinance as yf
 import json
 import os
-from datetime import datetime, timedelta
 
-# Função para obter dados diários ajustados de ações
-def obter_dados_acoes(api_key, simbolo):
-    url = 'https://www.alphavantage.co/query'
-    params = {
-        'function': 'TIME_SERIES_DAILY_ADJUSTED',
-        'symbol': simbolo,
-        'outputsize': 'full',  # Para obter todos os dados disponíveis
-        'apikey': api_key
-    }
+# Função para baixar dados de um símbolo específico e salvar como JSON com o nome da empresa
+def download_stock_data(symbol, branch_folder):
+    # Datas hard coded: de 01/01/2014 até 01/10/2024
+    start_date = "2014-01-01"
+    end_date = "2024-10-01"
 
-    response = requests.get(url, params=params, verify=False)
+    # Baixando os dados históricos e informações da empresa
+    stock_data = yf.Ticker(symbol)
+    history = stock_data.history(start=start_date, end=end_date)
     
-    if response.status_code == 200:
-        data = response.json()
-        print(json.dumps(data, indent=4))  # Imprimir a resposta completa para depuração
-        return data.get('Time Series (Daily Adjusted)', None)  # Usando .get() para evitar KeyError
-    else:
-        print(f'Erro na requisição: {response.status_code}')
-        return None
-
-# Função para filtrar dados dos últimos 10 anos
-def filtrar_dados_ultimos_10_anos(dados):
-    data_atual = datetime.now()
-    data_limite = data_atual - timedelta(days=365*10)
+    # Obtendo o nome da empresa a partir do símbolo
+    company_name = stock_data.info.get('shortName', symbol)  # Usa o símbolo como fallback se o nome não estiver disponível
     
-    dados_filtrados = {}
-    for data, valores in dados.items():
-        data_obj = datetime.strptime(data, '%Y-%m-%d')
-        if data_obj >= data_limite:
-            dados_filtrados[data] = valores
-            
-    return dados_filtrados
+    # Convertendo o DataFrame para um dicionário
+    data_dict = history.to_dict(orient='index')
 
-# Salvar os dados em um arquivo JSON
-def salvar_dados_json(dados, caminho):
-    os.makedirs(os.path.dirname(caminho), exist_ok=True)
+    # Convertendo as datas para strings
+    data_dict = {str(date): value for date, value in data_dict.items()}
+
+    # Verificando se o diretório do ramo existe, senão, cria o diretório
+    if not os.path.exists(branch_folder):
+        os.makedirs(branch_folder)
+
+    # Criando um nome de arquivo simples com o nome da empresa
+    file_name = f"{company_name}.json".replace(" ", "_")  # Substitui espaços no nome da empresa por "_"
+    file_path = os.path.join(branch_folder, file_name)
+
+    # Salvando como JSON na pasta do ramo
+    with open(file_path, 'w') as json_file:
+        json.dump(data_dict, json_file, indent=4)
+
+    print(f"Dados do símbolo '{symbol}' foram salvos como '{file_name}' em '{branch_folder}'")
+
+# Função para ler o arquivo de símbolos e baixar os dados para cada um em sua pasta correspondente
+def download_from_file():
+    file_path = "lista.txt"  # Caminho hardcoded do arquivo .txt
     
-    with open(caminho, 'w') as json_file:
-        json.dump(dados, json_file, indent=4)
+    try:
+        # Abrindo o arquivo .txt e lendo os símbolos
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
 
-# Chave da API (substitua pela sua)
-api_key = 'HIVGUYJE4ET71KD8'
+        current_branch = None  # Inicialmente, não temos um ramo de atuação definido
 
-# Solicitar o símbolo da ação
-simbolo = input("Digite o símbolo da ação que você deseja consultar (ex: MSFT): ")
+        # Processando cada linha do arquivo
+        for line in lines:
+            line = line.strip()  # Remove espaços e quebras de linha
+            if not line:
+                continue  # Ignora linhas vazias
 
-# Obter e filtrar os dados
-dados = obter_dados_acoes(api_key, simbolo)
-if dados:
-    dados_filtrados = filtrar_dados_ultimos_10_anos(dados)
+            # Verifica se a linha começa com "ramo", identificando um ramo de atuação
+            if line.lower().startswith("ramo"):
+                # Remove o prefixo "ramo" e os espaços em branco, mantendo apenas o nome relevante do ramo
+                current_branch = line.replace("ramo", "").strip()
+                print(f"\nRamo de atuação: {current_branch}")
+                continue
 
-    # Caminho para salvar o arquivo JSON
-    caminho_arquivo = f'C:/Users/23024522/Desktop/teste/{simbolo}_dados_10_anos.json'  # Substitua pelo caminho desejado
-    salvar_dados_json(dados_filtrados, caminho_arquivo)
+            # Se a linha não for o ramo, tratamos como símbolo da empresa
+            if current_branch:  # Certifica-se de que temos um ramo definido
+                branch_folder = os.path.join("arquivos-yahoo", current_branch)
+                print(f"Baixando dados para símbolo: {line} no ramo: {current_branch}")
+                download_stock_data(line, branch_folder)
 
-    print(f'Dados salvos em {caminho_arquivo}')
-else:
-    print("Não foram encontrados dados para salvar.")
+    except FileNotFoundError:
+        print(f"O arquivo {file_path} não foi encontrado.")
+    except Exception as e:
+        print(f"Ocorreu um erro: {e}")
+
+# Exemplo de uso
+if __name__ == "__main__":
+    download_from_file()
