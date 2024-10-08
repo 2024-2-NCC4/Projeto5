@@ -1,38 +1,56 @@
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
-import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException, ElementNotInteractableException
+from selenium.webdriver.chrome.options import Options
 
-# Caminho para o ChromeDriver
-chromedriver_path = "C:/Users/vitor/Downloads/chromedriver-win64/chromedriver.exe"
+# Configuração do WebDriver
+chrome_options = Options()
+chrome_options.add_argument("--start-maximized")
+driver_path = "Teste\\arquivos\\chromedriver\\chromedriver.exe"  # Substitua pelo caminho do seu chromedriver
+service = Service(driver_path)
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
-# Configurar o ChromeOptions
-options = webdriver.ChromeOptions()
-options.add_argument("--disable-extensions")
-options.add_argument("--disable-popup-blocking")
-options.add_argument("--start-maximized")
-options.add_argument("--disable-infobars")
-options.add_argument("--disable-notifications")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-
-# **Remova ou comente as linhas abaixo para não carregar o perfil**
-options.add_argument("user-data-dir=C:/Users/vitor/AppData/Local/Google/Chrome/User Data")
-options.add_argument("profile-directory=automacaofecap")  # Ou o nome do seu perfil
-
-# Inicializar o driver
-driver = webdriver.Chrome(service=Service(chromedriver_path), options=options)
-
-# Esperar o navegador iniciar
-time.sleep(5)
-
-# Tentar abrir o site
 try:
-    print("Tentando navegar para o site...")
-    driver.get("https://br.investing.com/")
-    print("Página carregada com sucesso.")
-except Exception as e:
-    print(f"Erro ao carregar a página: {e}")
-x
-# Manter o navegador aberto para visualização
-input("Pressione Enter para fechar o navegador...")
-driver.quit()
+    # Acessa a página de login do Google
+    driver.get("https://accounts.google.com/signin")
+
+    # Espera até que o campo de email esteja presente e o seleciona
+    email_field = WebDriverWait(driver, 20).until(
+        EC.visibility_of_element_located((By.XPATH, "//input[@type='email']"))
+    )
+    email_field.send_keys("fecapgrupo5@gmail.com")  # Substitua pelo seu e-mail
+    email_field.send_keys(Keys.RETURN)
+
+    # Espera até que o campo de senha esteja presente e o seleciona
+    password_field = WebDriverWait(driver, 20).until(
+        EC.visibility_of_element_located((By.XPATH, "//input[@type='password']"))
+    )
+    password_field.send_keys("")  #TODO Substitua pela sua senha
+    password_field.send_keys(Keys.RETURN)
+
+    print("Login realizado com sucesso!")
+
+    # Acessa o site br.investing.com
+    driver.get("https://br.investing.com")
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'topBar')]"))
+    )
+    print("Site br.investing.com acessado com sucesso!")
+
+    # Clica no botão de login no site br.investing.com
+    login_button = WebDriverWait(driver, 20).until(
+        EC.element_to_be_clickable((By.XPATH, "//a[@class='login']"))
+    )
+    login_button.click()
+    print("Botão de login clicado com sucesso!")
+
+except TimeoutException:
+    print("Erro: O campo não foi encontrado a tempo.")
+
+finally:
+    # Fecha o navegador
+    driver.quit()
