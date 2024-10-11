@@ -2,11 +2,11 @@ ramo Petroleo
 2222.SR
 XOM
 CVX
-PTRCY
+0857.HK
 SHEL
 PBR
 BP
-SNPTY
+0386.HK
 EQNR
 ROSN.ME
 GAZP.ME
@@ -93,7 +93,6 @@ BMW.DE
 AML.L
 RHM.DE
 IVG.MI
-SCVB.ST
 
 ramo MercadoImobiliario
 ARE
