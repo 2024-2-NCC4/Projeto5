@@ -3,7 +3,7 @@ import pandas as pd
 
 def concatenar_csv():
     # Diretório onde os CSVs limpos estão organizados por ramo de atuação
-    input_dir = 'Dados/Limpos'
+    input_dir = 'Dados/Limpos2'
     
     # Lista para armazenar os DataFrames
     df_list = []
@@ -33,7 +33,7 @@ def concatenar_csv():
     df_concatenado = pd.concat(df_list, ignore_index=True)
     
     # Salvar o resultado em um único CSV
-    output_file = 'Dados/concatenado.csv'
+    output_file = 'Dados/concatenado2.csv'
     df_concatenado.to_csv(output_file, index=False)
     
     print(f"Arquivo concatenado salvo em {output_file}")

@@ -2,36 +2,14 @@ import pandas as pd
 import json
 import os
 
-def formatar_valores(valor, ultima_grandeza):
-    """Formatar o valor com base na última grandeza e retornar o valor formatado e o coeficiente."""
-    nova_grandeza = None
+def padronizar_valores(df, colunas):
+    """Padronizar os valores das colunas usando Z-score."""
+    for coluna in colunas:
+        media = df[coluna].mean()
+        desvio_padrao = df[coluna].std()
+        df[f'{coluna}_Padronizado'] = df[coluna].apply(lambda x: (x - media) / desvio_padrao)
 
-    if valor < 10:  # Menos que 10
-        nova_grandeza = 'menor_10'
-        coeficiente = 0.1
-        valor_formatado = round(valor * 10, 2)
-    elif valor < 100:  # De 10 a 99
-        nova_grandeza = 'menor_100'
-        coeficiente = 1
-        valor_formatado = round(valor, 2)
-    elif valor < 1000:  # De 100 a 999
-        nova_grandeza = 'menor_1000'
-        coeficiente = 1  # Mantém o coeficiente como 1
-        valor_formatado = round(valor, 2)  # Não divide por 10
-    elif valor < 10000:  # De 1000 a 9999
-        nova_grandeza = 'menor_10000'
-        coeficiente = 100
-        valor_formatado = round(valor / 100, 2)
-    else:  # 10000 ou mais
-        nova_grandeza = 'maior_10000'
-        coeficiente = 1000
-        valor_formatado = round(valor / 1000, 2)
-
-    # Se o valor atual transita para uma nova grandeza, mantenha o coeficiente anterior
-    if ultima_grandeza is not None and ultima_grandeza != nova_grandeza:
-        coeficiente = 1  # Manter coeficiente como 1 se transitar
-
-    return valor_formatado, coeficiente, nova_grandeza
+    return df
 
 def json_para_csv(json_file, csv_file):
     try:
@@ -58,18 +36,9 @@ def json_para_csv(json_file, csv_file):
         df[['Abertura', 'Fechamento', 'Maxima', 'Minima']] = df[['Abertura', 'Fechamento', 'Maxima', 'Minima']].applymap(lambda x: round(x, 2))
         df['Ultimo'] = df['Fechamento'].apply(lambda x: round(x, 2))
 
-        # Adicionando as colunas formatadas e coeficientes
-        ultima_grandeza = None
-        for coluna in ['Ultimo', 'Abertura', 'Fechamento', 'Maxima', 'Minima']:
-            valores_formatados = []
-            coeficientes = []
-            for valor in df[coluna]:
-                valor_formatado, coeficiente, ultima_grandeza = formatar_valores(valor, ultima_grandeza)
-                valores_formatados.append(valor_formatado)
-                coeficientes.append(coeficiente)
-
-            df[f'{coluna}_Formatado'] = valores_formatados
-            df[f'{coluna}_Coeficiente'] = coeficientes
+        # Padronizar os valores das colunas relevantes
+        colunas_para_padronizar = ['Ultimo', 'Abertura', 'Fechamento', 'Maxima', 'Minima']
+        df = padronizar_valores(df, colunas_para_padronizar)
 
         df['Volume'] = df['Volume'].astype(int)
         df['Data'] = pd.to_datetime(df['Data'].str[:-6]).dt.strftime('%d.%m.%Y')
@@ -81,7 +50,7 @@ def json_para_csv(json_file, csv_file):
 
 def converter_todos_json_para_csv():
     input_dir = 'Dados/Brutos'
-    output_dir = 'Dados/Limpos'
+    output_dir = 'Dados/Limpos2'
 
     for root, dirs, files in os.walk(input_dir):
         for file in files:
