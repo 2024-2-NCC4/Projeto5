@@ -31,13 +31,13 @@ def download_stock_data(symbol, branch_folder):
 
     # Salvando como JSON na pasta do ramo
     with open(file_path, 'w') as json_file:
-        json.dump(data_dict, json_file, indent=4)
+        json.dump(data_dict, json_file, indent=4)   
 
     print(f"Dados do símbolo '{symbol}' foram salvos como '{file_name}' em '{branch_folder}'")
 
 # Função para ler o arquivo de símbolos e baixar os dados para cada um em sua pasta correspondente
 def download_from_file():
-    file_path = "lista.txt"  # Caminho hardcoded do arquivo .txt
+    file_path = "C://Projetos/Projeto5/lista2.txt"  # Caminho hardcoded do arquivo .txt
     
     try:
         # Abrindo o arquivo .txt e lendo os símbolos
@@ -61,7 +61,7 @@ def download_from_file():
 
             # Se a linha não for o ramo, tratamos como símbolo da empresa
             if current_branch:  # Certifica-se de que temos um ramo definido
-                branch_folder = os.path.join("arquivos-yahoo", current_branch)
+                branch_folder = os.path.join("Dados/Brutos", current_branch)
                 print(f"Baixando dados para símbolo: {line} no ramo: {current_branch}")
                 download_stock_data(line, branch_folder)
 
