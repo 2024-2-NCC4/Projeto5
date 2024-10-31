@@ -5,7 +5,7 @@ import os
 # Função para baixar dados de um símbolo específico e salvar como JSON com o nome da empresa
 def download_stock_data(symbol, branch_folder):
     # Datas hard coded: de 01/01/2014 até 01/10/2024
-    start_date = "2014-01-01"
+    start_date = "2004-01-01"
     end_date = "2024-10-01"
 
     # Baixando os dados históricos e informações da empresa
