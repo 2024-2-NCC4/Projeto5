@@ -1,0 +1,16 @@
+/* src/components/Dashboard.css */
+
+.dashboard {
+    padding: 20px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-form div {
+    display: flex;
+    flex-direction: column;
+}

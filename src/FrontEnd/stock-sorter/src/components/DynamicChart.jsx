@@ -1,13 +1,13 @@
-// src/components/CandlestickChart.jsx
-
+// src/components/DynamicChart.jsx
 import React, { useLayoutEffect } from 'react';
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
-const CandlestickChart = ({ data }) => {
+const DynamicChart = ({ data }) => {
     useLayoutEffect(() => {
         let root = am5.Root.new("chartdiv");
+
         root.setThemes([am5themes_Animated.new(root)]);
 
         let chart = root.container.children.push(
@@ -34,14 +34,11 @@ const CandlestickChart = ({ data }) => {
         );
 
         let series = chart.series.push(
-            am5xy.CandlestickSeries.new(root, {
+            am5xy.LineSeries.new(root, {
                 xAxis: xAxis,
                 yAxis: yAxis,
-                openValueYField: "open",
-                valueYField: "close",
-                lowValueYField: "low",
-                highValueYField: "high",
-                dateXField: "date"
+                valueYField: "Fechamento",
+                dateXField: "Data"
             })
         );
 
@@ -53,4 +50,4 @@ const CandlestickChart = ({ data }) => {
     return <div id="chartdiv" style={{ width: "100%", height: "500px" }}></div>;
 };
 
-export default CandlestickChart;
+export default DynamicChart;
