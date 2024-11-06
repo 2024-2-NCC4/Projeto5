@@ -70,12 +70,12 @@ app.get('/query', (req, res) => {
 
   // Montar a query
   const query = `
-    SELECT Data, Fechamento 
+    SELECT Data, Fechamento_Padronizado 
     FROM tabela_projeto 
     WHERE Ramo = ? 
       AND Simbolo = ? 
       AND SUBSTRING(Data, 7, 4) = ? 
-      AND SUBSTRING(Data, 4, 2) BETWEEN ? AND ?
+      AND SUBSTRING(Data, 4, 2) BETWEEN ? AND ? 
   `;
 
   // Extrair o ano e os meses das datas
