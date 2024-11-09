@@ -1,11 +1,31 @@
 // src/components/FilterForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const FilterForm = ({ onSubmit }) => {
     const [ramo, setRamo] = useState('');
     const [simbolo, setSimbolo] = useState('');
     const [dataInicio, setDataInicio] = useState('');
     const [dataFinal, setDataFinal] = useState('');
+    const [ramos, setRamos] = useState([]);
+    const [simbolos, setSimbolos] = useState([]);
+
+    // Buscar ramos e símbolos ao montar o componente
+    useEffect(() => {
+        const fetchOptions = async () => {
+            try {
+                const ramoResponse = await axios.get('http://localhost:3000/ramos');
+                setRamos(ramoResponse.data);
+
+                const simboloResponse = await axios.get('http://localhost:3000/simbolos');
+                setSimbolos(simboloResponse.data);
+            } catch (error) {
+                console.error("Erro ao buscar opções de ramo e símbolo:", error);
+            }
+        };
+
+        fetchOptions();
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -16,11 +36,21 @@ const FilterForm = ({ onSubmit }) => {
         <form onSubmit={handleSubmit} className="filter-form">
             <div>
                 <label>Ramo:</label>
-                <input type="text" value={ramo} onChange={(e) => setRamo(e.target.value)} required />
+                <select value={ramo} onChange={(e) => setRamo(e.target.value)} required>
+                    <option value="">Selecione um ramo</option>
+                    {ramos.map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                    ))}
+                </select>
             </div>
             <div>
                 <label>Símbolo:</label>
-                <input type="text" value={simbolo} onChange={(e) => setSimbolo(e.target.value)} required />
+                <select value={simbolo} onChange={(e) => setSimbolo(e.target.value)} required>
+                    <option value="">Selecione um símbolo</option>
+                    {simbolos.map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                    ))}
+                </select>
             </div>
             <div>
                 <label>Data Início:</label>

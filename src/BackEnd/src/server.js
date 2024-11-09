@@ -1,10 +1,17 @@
 require('dotenv').config();
-
 const express = require('express');
 const mysql = require('mysql2');
+const cors = require('cors'); // Importa o pacote de CORS
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors({
+  origin: 'http://localhost:5174', // Substitua pela URL do seu frontend
+  methods: ['GET', 'POST'], // Métodos permitidos
+  allowedHeaders: ['Content-Type', 'Authorization'] // Cabeçalhos permitidos
+}));
+
 
 // Configurar a conexão com o banco de dados
 const db = mysql.createConnection({
@@ -27,11 +34,12 @@ db.connect((err) => {
   console.log('Conectado ao MySQL!');
 });
 
-// Seus endpoints continuam os mesmos
+// Endpoint de teste
 app.get('/', (req, res) => {
   res.send('Servidor online!');
 });
 
+// Endpoint para obter os primeiros e últimos 10 registros
 app.get('/dev', (req, res) => {
   const firstTenQuery = 'SELECT * FROM tabela_projeto ORDER BY id ASC LIMIT 10';
   const lastTenQuery = 'SELECT * FROM tabela_projeto ORDER BY id DESC LIMIT 10';
@@ -61,6 +69,7 @@ app.get('/dev', (req, res) => {
   });
 });
 
+// Endpoint para consulta filtrada
 app.get('/query', (req, res) => {
   const { ramo, simbolo, data_inicio, data_final } = req.query;
 
@@ -74,14 +83,14 @@ app.get('/query', (req, res) => {
     FROM tabela_projeto 
     WHERE Ramo = ? 
       AND Simbolo = ? 
-      AND SUBSTRING(Data, 7, 4) = ? 
-      AND SUBSTRING(Data, 4, 2) BETWEEN ? AND ?
+      AND SUBSTRING(Data, 7, 4) = ?       -- Extrair o ano (posição 7 a 10)
+      AND SUBSTRING(Data, 4, 2) BETWEEN ? AND ? -- Extrair o mês (posição 4 a 5)
   `;
 
-  // Extrair o ano e os meses das datas
-  const ano = data_inicio.slice(-4); // Pega os últimos 4 caracteres
-  const mes_inicio = data_inicio.slice(3, 5); // Pega os caracteres do mês
-  const mes_final = data_final.slice(3, 5); // Pega os caracteres do mês
+  // Extrair o ano e os meses das datas com o novo formato dd-mm-yyyy
+  const ano = data_inicio.slice(-4); // Últimos 4 caracteres para o ano
+  const mes_inicio = data_inicio.slice(3, 5); // Caracteres do mês no formato dd-mm-yyyy
+  const mes_final = data_final.slice(3, 5); // Caracteres do mês no formato dd-mm-yyyy
 
   // Executar a query
   db.query(query, [ramo, simbolo, ano, mes_inicio, mes_final], (err, results) => {
@@ -94,7 +103,7 @@ app.get('/query', (req, res) => {
   });
 });
 
-
+// Iniciar o servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
