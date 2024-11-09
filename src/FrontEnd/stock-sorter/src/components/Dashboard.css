@@ -1,16 +1,76 @@
 /* src/components/Dashboard.css */
 
 .dashboard {
+    max-width: 800px;
+    margin: 50px auto;
     padding: 20px;
+    background-color: #f5f7fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.dashboard h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #2c3e50;
 }
 
 .filter-form {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 15px;
     margin-bottom: 20px;
 }
 
 .filter-form div {
     display: flex;
     flex-direction: column;
+}
+
+.filter-form label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.filter-form input[type="text"],
+.filter-form input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.filter-form button {
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-form button:hover {
+    background-color: #2980b9;
+}
+
+.loading-message,
+.no-data-message {
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+    margin-top: 20px;
+}
+
+.chart-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
