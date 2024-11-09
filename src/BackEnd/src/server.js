@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors'); // Importa o pacote de CORS
+const bcrypt = require('bcrypt'); // para proteger as senhas
+const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,6 +14,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'] // Cabeçalhos permitidos
 }));
 
+app.use(express.json());
 
 // Configurar a conexão com o banco de dados
 const db = mysql.createConnection({
@@ -25,6 +28,7 @@ console.log("Host: ", process.env.DB_HOST);
 console.log("Usuario:", process.env.DB_USER);
 console.log("Senha: ", process.env.DB_PASSWORD);
 
+/*
 // Conectar ao banco de dados
 db.connect((err) => {
   if (err) {
@@ -33,16 +37,76 @@ db.connect((err) => {
   }
   console.log('Conectado ao MySQL!');
 });
+*/
+
+db.on('error', (err) => {
+  console.error('Erro na conexão com o banco de dados:', err);
+});
+
 
 // Endpoint de teste
 app.get('/', (req, res) => {
   res.send('Servidor online!');
 });
 
+//Endpoints de Login e Registro
+
+// Endpoint de Registro
+app.post('/register', async (req, res) => {
+  const { name, email, password } = req.body;
+  
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'Nome, email e senha são necessários' });
+  }
+
+  // Criptografar a senha
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const query = `INSERT INTO Usuarios (Nome, Email, Senha) VALUES (?, ?, ?)`;
+  db.query(query, [name, email, hashedPassword], (err, result) => {
+    if (err) {
+      console.error('Erro ao registrar usuário:', err);
+      return res.status(500).json({ message: 'Erro ao registrar o usuário' });
+    }
+    res.status(201).json({ message: 'Usuário registrado com sucesso' });
+  });
+});
+
+
+// Endpoint de Login
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email e senha são necessários' });
+  }
+
+  const query = `SELECT * FROM Usuarios WHERE Email = ?`;
+  db.query(query, [email], async (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar usuário:', err);
+      return res.status(500).json({ message: 'Erro no servidor' });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ message: 'Credenciais inválidas' });
+    }
+
+    // Comparar a senha fornecida com a senha armazenada
+    const isMatch = await bcrypt.compare(password, results[0].Senha);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciais inválidas' });
+    }
+
+    res.json({ message: 'Login bem-sucedido', userId: results[0].Id });
+  });
+});
+
 // Endpoint para obter os primeiros e últimos 10 registros
 app.get('/dev', (req, res) => {
-  const firstTenQuery = 'SELECT * FROM tabela_projeto ORDER BY id ASC LIMIT 10';
-  const lastTenQuery = 'SELECT * FROM tabela_projeto ORDER BY id DESC LIMIT 10';
+  const firstTenQuery = 'SELECT * FROM Dados ORDER BY id ASC LIMIT 10';
+  const lastTenQuery = 'SELECT * FROM Dados ORDER BY id DESC LIMIT 10';
 
   db.query(firstTenQuery, (err, firstTenResults) => {
     if (err) {
@@ -80,7 +144,7 @@ app.get('/query', (req, res) => {
   // Montar a query
   const query = `
     SELECT Data, Fechamento
-    FROM tabela_projeto 
+    FROM Dados 
     WHERE Ramo = ? 
       AND Simbolo = ? 
       AND SUBSTRING(Data, 7, 4) = ?       -- Extrair o ano (posição 7 a 10)
@@ -102,6 +166,8 @@ app.get('/query', (req, res) => {
     res.json(results);
   });
 });
+
+
 
 // Iniciar o servidor
 app.listen(PORT, () => {
