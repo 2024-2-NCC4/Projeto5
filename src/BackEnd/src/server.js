@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: 'http://localhost:5174', // Substitua pela URL do seu frontend
+  origin: 'http://localhost:5173', // Substitua pela URL do seu frontend
   methods: ['GET', 'POST'], // Métodos permitidos
   allowedHeaders: ['Content-Type', 'Authorization'] // Cabeçalhos permitidos
 }));
@@ -79,7 +79,7 @@ app.get('/query', (req, res) => {
 
   // Montar a query
   const query = `
-    SELECT Data, Fechamento 
+    SELECT Data, Fechamento
     FROM tabela_projeto 
     WHERE Ramo = ? 
       AND Simbolo = ? 

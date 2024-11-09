@@ -7,7 +7,7 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/Dashboard" element={<Dashboard />} />
             </Routes>
         </Router>
     );

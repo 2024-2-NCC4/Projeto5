@@ -1,0 +1,6 @@
+1. Front do DashBoard
+2. Login/Registro
+3. Analises
+4. EndPoints retornando os valores das analises para mostrar no front e usar no python
+
+
