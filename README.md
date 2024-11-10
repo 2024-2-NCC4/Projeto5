@@ -79,17 +79,38 @@ Encontre o index.html na pasta executáveis e execute-o como uma página WEB (at
 
 ## 💻 Configuração para Desenvolvimento
 
-Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformas.
+Para configurar o ambiente de desenvolvimento, siga os passos abaixo:
 
-Para abrir este projeto você necessita das seguintes ferramentas:
+Setup do projeto:
 
--<a href="https://godotengine.org/download">GODOT</a>
+1. Clone o repositório:
 
 ```sh
-make install
-npm test
-Coloque código do prompt de comnando se for necessário
+git clone https://github.com/2024-2-NCC4/Projeto5.git
 ```
+
+2. Instalar as dependências no BackEnd e FrontEnd:
+
+Pasta FrontEnd: `src/FrontEnd/stock-sorter`
+
+Pasta BackEnd: `src/BackEnd/`
+
+```sh
+npm install
+```
+
+3. Iniciar o servidor do FrontEnd:
+
+```sh
+npm run dev
+```
+
+4. Iniciar o servidor do BackEnd:
+
+```sh
+npm run start
+```
+
 
 ## 📋 Licença/License
 
