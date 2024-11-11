@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FilterForm = ({ onSubmit }) => {
+const FilterForm = ({ onFilter }) => {
     const [ramo, setRamo] = useState('');
     const [simbolo, setSimbolo] = useState('');
     const [dataInicio, setDataInicio] = useState('');
@@ -10,7 +10,6 @@ const FilterForm = ({ onSubmit }) => {
     const [ramos, setRamos] = useState([]);
     const [simbolos, setSimbolos] = useState([]);
 
-    // Buscar ramos e símbolos ao montar o componente
     useEffect(() => {
         const fetchOptions = async () => {
             try {
@@ -29,7 +28,7 @@ const FilterForm = ({ onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit({ ramo, simbolo, dataInicio, dataFinal });
+        onFilter({ ramo, simbolo, dataInicio, dataFinal });
     };
 
     return (
@@ -60,7 +59,7 @@ const FilterForm = ({ onSubmit }) => {
                 <label>Data Final:</label>
                 <input type="date" value={dataFinal} onChange={(e) => setDataFinal(e.target.value)} required />
             </div>
-            <button type="submit">Gerar Gráfico</button>
+            <button type="submit">Aplicar Filtros</button>
         </form>
     );
 };
