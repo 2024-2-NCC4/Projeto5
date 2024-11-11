@@ -133,6 +133,90 @@ app.get('/dev', (req, res) => {
   });
 });
 
+// Endpoint para obter a data mínima considerando o formato de texto dd.mm.yyyy
+app.get('/min_date', (req, res) => {
+  const query = `
+    SELECT Data AS minDate 
+    FROM Dados 
+    ORDER BY STR_TO_DATE(Data, '%d.%m.%Y') ASC 
+    LIMIT 1
+  `; // Usamos STR_TO_DATE para converter a coluna de texto no formato correto
+
+  db.query(query, (err, result) => {
+    if (err) {
+      console.error('Erro ao obter a data mínima:', err);
+      res.status(500).send('Erro no servidor');
+      return;
+    }
+    res.json(result[0].minDate);
+  });
+});
+
+
+// Endpoint para obter a data máxima considerando o formato de texto dd.mm.yyyy
+app.get('/max_date', (req, res) => {
+  const query = `
+    SELECT Data AS maxDate 
+    FROM Dados 
+    ORDER BY STR_TO_DATE(Data, '%d.%m.%Y') DESC 
+    LIMIT 1
+  `; // Usamos STR_TO_DATE para converter a coluna de texto no formato correto
+
+  db.query(query, (err, result) => {
+    if (err) {
+      console.error('Erro ao obter a data máxima:', err);
+      res.status(500).send('Erro no servidor');
+      return;
+    }
+    res.json(result[0].maxDate);
+  });
+});
+
+
+
+// Endpoint para obter os valores distintos de Ramo
+app.get('/ramos', (req, res) => {
+  const query = 'SELECT DISTINCT Ramo FROM Dados';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar ramos:', err);
+      return res.status(500).send('Erro ao buscar ramos');
+    }
+    const ramos = results.map(row => row.Ramo); // Extrai os valores de Ramo
+    res.json(ramos);
+  });
+});
+
+// Endpoint para obter os valores distintos de Simbolo
+app.get('/simbolos', (req, res) => {
+  const query = 'SELECT DISTINCT Simbolo FROM Dados';
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar símbolos:', err);
+      return res.status(500).send('Erro ao buscar símbolos');
+    }
+    const simbolos = results.map(row => row.Simbolo); // Extrai os valores de Simbolo
+    res.json(simbolos);
+  });
+});
+
+
+// Adicione este endpoint ao seu arquivo server.js
+app.get('/simbolos/:ramo', (req, res) => {
+  const { ramo } = req.params;
+
+  const query = 'SELECT DISTINCT Simbolo FROM Dados WHERE Ramo = ?';
+  db.query(query, [ramo], (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar símbolos:', err);
+      return res.status(500).json({ message: 'Erro ao buscar símbolos' });
+    }
+
+    const simbolos = results.map(row => row.Simbolo);
+    res.json(simbolos);
+  });
+});
+
 // Endpoint para consulta filtrada
 app.get('/query', (req, res) => {
   const { ramo, simbolo, data_inicio, data_final } = req.query;
