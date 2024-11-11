@@ -60,6 +60,20 @@ h2 {
     margin-bottom: 4px;
 }
 
+.filter-form select {
+    background-color: white; /* Fundo branco */
+    color: black; /* Texto preto */
+    border: 1px solid #ccc; /* Borda cinza clara */
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.filter-form select:focus {
+    outline: none;
+    border-color: #007bff; /* Cor de destaque na borda ao focar */
+}
+
+
 .filter-form select,
 .filter-form input[type="date"] {
     width: 100%;

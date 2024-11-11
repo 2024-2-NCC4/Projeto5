@@ -142,6 +142,7 @@ app.get('/min_date', (req, res) => {
     LIMIT 1
   `; // Usamos STR_TO_DATE para converter a coluna de texto no formato correto
 
+
   db.query(query, (err, result) => {
     if (err) {
       console.error('Erro ao obter a data mínima:', err);
@@ -222,34 +223,29 @@ app.get('/query', (req, res) => {
   const { ramo, simbolo, data_inicio, data_final } = req.query;
 
   if (!ramo || !simbolo || !data_inicio || !data_final) {
-    return res.status(400).send('Todos os parâmetros são necessários: ramo, simbolo, data_inicio e data_final.');
+      return res.status(400).send('Todos os parâmetros são necessários: ramo, simbolo, data_inicio e data_final.');
   }
 
-  // Montar a query
+  // Montar a query usando STR_TO_DATE para comparar as datas corretamente
   const query = `
-    SELECT Data, Fechamento
-    FROM Dados 
-    WHERE Ramo = ? 
-      AND Simbolo = ? 
-      AND SUBSTRING(Data, 7, 4) = ?       -- Extrair o ano (posição 7 a 10)
-      AND SUBSTRING(Data, 4, 2) BETWEEN ? AND ? -- Extrair o mês (posição 4 a 5)
+      SELECT Data, Fechamento
+      FROM Dados 
+      WHERE Ramo = ? 
+        AND Simbolo = ? 
+        AND STR_TO_DATE(Data, '%d.%m.%Y') BETWEEN STR_TO_DATE(?, '%d.%m.%Y') AND STR_TO_DATE(?, '%d.%m.%Y')
   `;
 
-  // Extrair o ano e os meses das datas com o novo formato dd-mm-yyyy
-  const ano = data_inicio.slice(-4); // Últimos 4 caracteres para o ano
-  const mes_inicio = data_inicio.slice(3, 5); // Caracteres do mês no formato dd-mm-yyyy
-  const mes_final = data_final.slice(3, 5); // Caracteres do mês no formato dd-mm-yyyy
-
   // Executar a query
-  db.query(query, [ramo, simbolo, ano, mes_inicio, mes_final], (err, results) => {
-    if (err) {
-      console.error('Erro ao executar a consulta:', err);
-      return res.status(500).send('Erro no servidor ao executar a consulta.');
-    }
+  db.query(query, [ramo, simbolo, data_inicio, data_final], (err, results) => {
+      if (err) {
+          console.error('Erro ao executar a consulta:', err);
+          return res.status(500).send('Erro no servidor ao executar a consulta.');
+      }
 
-    res.json(results);
+      res.json(results);
   });
 });
+
 
 
 

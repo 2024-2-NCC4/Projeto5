@@ -1,12 +1,12 @@
+// src/components/DynamicChart.jsx
 import React, { useEffect } from 'react';
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
-const DynamicChart = ({ data }) => {
+const DynamicChart = ({ data, simbolo }) => {
     useEffect(() => {
         if (data && data.length > 0) {
-            // Remover instâncias anteriores para evitar duplicação
             am5.array.each(am5.registry.rootElements, function (root) {
                 if (root.dom.id === "chartdiv") {
                     root.dispose();
@@ -23,14 +23,13 @@ const DynamicChart = ({ data }) => {
                     wheelX: "panX",
                     wheelY: "zoomX",
                     pinchZoomX: true,
-                    layout: root.verticalLayout // Ajuste de layout para melhorar a organização
+                    layout: root.verticalLayout 
                 })
             );
 
-            // Título do gráfico
             let title = chart.children.unshift(
                 am5.Label.new(root, {
-                    text: "Preço de Fechamento Diário - Apple Inc.",
+                    text: `Preço de Fechamento Diário - ${simbolo || 'Indefinido'}`, // Adiciona o símbolo ao título
                     fontSize: 20,
                     fontWeight: "bold",
                     textAlign: "center",
@@ -40,22 +39,20 @@ const DynamicChart = ({ data }) => {
                 })
             );
 
-            // Configura eixo X (Data)
             let xAxis = chart.xAxes.push(
                 am5xy.DateAxis.new(root, {
                     baseInterval: { timeUnit: "day", count: 1 },
                     renderer: am5xy.AxisRendererX.new(root, {
-                        minGridDistance: 50 // Ajuste da distância mínima entre as linhas do eixo X
+                        minGridDistance: 50 
                     }),
                     tooltip: am5.Tooltip.new(root, {})
                 })
             );
 
-            // Configura eixo Y (Fechamento)
             let yAxis = chart.yAxes.push(
                 am5xy.ValueAxis.new(root, {
                     renderer: am5xy.AxisRendererY.new(root, {
-                        minGridDistance: 30 // Ajuste da distância mínima entre as linhas do eixo Y
+                        minGridDistance: 30 
                     })
                 })
             );
@@ -71,7 +68,6 @@ const DynamicChart = ({ data }) => {
                 })
             );
 
-            // Configuração da série de dados
             let series = chart.series.push(
                 am5xy.LineSeries.new(root, {
                     name: "Fechamento",
@@ -81,19 +77,17 @@ const DynamicChart = ({ data }) => {
                     valueXField: "Data",
                     tooltip: am5.Tooltip.new(root, {
                         labelText: "{valueY}",
-                        dy: -5 // Ajuste de posição do tooltip
+                        dy: -5 
                     })
                 })
             );
 
-            // Conversão de dados
             const formattedData = data.map(item => ({
                 Data: new Date(item.Data.split(".").reverse().join("-")).getTime(),
                 Fechamento: parseFloat(item.Fechamento)
             }));
             series.data.setAll(formattedData);
 
-            // Estilização da linha e pontos de dados
             series.strokes.template.setAll({
                 stroke: am5.color(0x007bff),
                 strokeWidth: 2
@@ -114,7 +108,6 @@ const DynamicChart = ({ data }) => {
                 xAxis: xAxis
             }));
 
-            // Área sombreada abaixo da linha
             series.fills.template.setAll({
                 fillOpacity: 0.1,
                 visible: true
@@ -127,7 +120,7 @@ const DynamicChart = ({ data }) => {
                 root.dispose();
             };
         }
-    }, [data]);
+    }, [data, simbolo]); // Adiciona simbolo como dependência para atualizar o título
 
     return <div id="chartdiv" style={{ width: "100%", height: "500px", minWidth: "600px" }}></div>;
 };

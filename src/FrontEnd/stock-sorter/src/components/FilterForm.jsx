@@ -67,10 +67,12 @@ const FilterForm = ({ onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const dataInicio = `${dataInicioAno}-${dataInicioMes}-01`;
-        const dataFinal = `${dataFinalAno}-${dataFinalMes}-01`;
+        const dataInicio = `01.${dataInicioMes}.${dataInicioAno}`;
+        const dataFinal = `01.${dataFinalMes}.${dataFinalAno}`;
+        console.log("Filtros aplicados:", { ramo, simbolo, dataInicio, dataFinal });
         onSubmit({ ramo, simbolo, dataInicio, dataFinal });
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="filter-form">
