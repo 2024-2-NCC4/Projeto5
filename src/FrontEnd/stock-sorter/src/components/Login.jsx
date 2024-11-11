@@ -11,7 +11,6 @@ const Login = () => {
     const handleLogin = async () => {
         try {
             const response = await axios.post('http://localhost:3000/login', { email, password });
-            alert("Login bem-sucedido!");
             navigate('/home'); // Redireciona para a tela inicial após o login
         } catch (error) {
             console.error('Erro ao fazer login:', error);
