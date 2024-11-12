@@ -47,7 +47,7 @@ const Dashboard = () => {
             try {
                 const defaultParams = {
                     ramo: 'Tecnologia', // Ramo da Apple
-                    simbolo: 'Apple_Inc.',
+                    simbolo: 'Apple',
                     data_inicio: '01.01.2022', // Altere conforme necessário
                     data_final: '31.12.2022', // Altere conforme necessário
                 };

@@ -42,6 +42,8 @@ body, html {
     border-radius: 5px;
     font-size: 1rem;
     outline: none;
+    background-color: white; /* Fundo branco */
+    color: black; /* Texto preto */
 }
 
 .register-container input:focus {

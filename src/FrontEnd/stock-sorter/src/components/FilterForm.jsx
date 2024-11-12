@@ -1,6 +1,7 @@
 // src/components/FilterForm.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './FilterForm.css';
 
 const FilterForm = ({ onSubmit }) => {
     const [ramo, setRamo] = useState('');

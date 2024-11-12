@@ -42,7 +42,10 @@ body, html {
     margin: 0.5rem 0;
     border: 1px solid #ddd;
     border-radius: 4px;
+    background-color: white; /* Fundo branco */
+    color: black; /* Texto preto */
 }
+
 
 .login-box button {
     width: 100%;

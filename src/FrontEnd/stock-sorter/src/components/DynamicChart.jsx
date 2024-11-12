@@ -20,7 +20,7 @@ const DynamicChart = ({ data, simbolo }) => {
                 am5xy.XYChart.new(root, {
                     panX: true,
                     panY: true,
-                    wheelX: "panX",
+                    wheelX: "zoomX", // Apenas o scroll fará o zoom
                     wheelY: "zoomX",
                     pinchZoomX: true,
                     layout: root.verticalLayout 
@@ -29,7 +29,7 @@ const DynamicChart = ({ data, simbolo }) => {
 
             let title = chart.children.unshift(
                 am5.Label.new(root, {
-                    text: `Preço de Fechamento Diário - ${simbolo || 'Indefinido'}`, // Adiciona o símbolo ao título
+                    text: `Preço de Fechamento Diário - ${simbolo || 'Indefinido'}`,
                     fontSize: 20,
                     fontWeight: "bold",
                     textAlign: "center",
@@ -103,8 +103,9 @@ const DynamicChart = ({ data, simbolo }) => {
                 });
             });
 
+            // Configurar o cursor para pan com o clique do mouse e zoom com o scroll
             chart.set("cursor", am5xy.XYCursor.new(root, {
-                behavior: "zoomX",
+                behavior: "none", // Desativa o zoom no clique
                 xAxis: xAxis
             }));
 
@@ -120,7 +121,7 @@ const DynamicChart = ({ data, simbolo }) => {
                 root.dispose();
             };
         }
-    }, [data, simbolo]); // Adiciona simbolo como dependência para atualizar o título
+    }, [data, simbolo]);
 
     return <div id="chartdiv" style={{ width: "100%", height: "500px", minWidth: "600px" }}></div>;
 };

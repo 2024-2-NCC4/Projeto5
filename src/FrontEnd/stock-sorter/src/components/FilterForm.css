@@ -1,0 +1,95 @@
+/* src/components/FilterForm.css */
+
+/* Estilos gerais do formulário de filtro */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Permite que os elementos se ajustem automaticamente para telas pequenas */
+}
+
+.filter-form div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 150px; /* Garante uma largura mínima para os campos */
+}
+
+.filter-form label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.filter-form select,
+.filter-form input {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    min-width: 120px;
+}
+
+.filter-form button {
+    padding: 8px 12px;
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    height: 42px;
+    align-self: center;
+    transition: background-color 0.3s ease;
+}
+
+/* Ajuste para telas menores */
+@media (max-width: 768px) {
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-form div {
+        min-width: auto; /* Permite que os elementos usem a largura completa do formulário */
+    }
+
+    .filter-form button {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+/* Ajuste para telas muito pequenas (celulares) */
+@media (max-width: 480px) {
+    .filter-form {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .filter-form div {
+        min-width: 100%;
+    }
+
+    .filter-form select,
+    .filter-form input {
+        font-size: 13px;
+        padding: 6px;
+    }
+
+    .filter-form button {
+        font-size: 13px;
+        padding: 8px;
+    }
+}
