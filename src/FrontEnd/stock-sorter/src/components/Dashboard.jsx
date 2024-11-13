@@ -10,7 +10,7 @@ const Dashboard = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filterMessage, setFilterMessage] = useState('');
-    const [simboloSelecionado, setSimboloSelecionado] = useState('Apple Inc.');
+    const [simboloSelecionado, setSimboloSelecionado] = useState('Apple');
     const navigate = useNavigate();
 
     // Função para aplicar os filtros
@@ -54,7 +54,7 @@ const Dashboard = () => {
                 console.log("Parâmetros padrão:", defaultParams); // Verifica os parâmetros no console
                 const response = await axios.get('http://localhost:3000/query', { params: defaultParams });
                 if (response.data.length === 0) {
-                    setFilterMessage(`Nenhum dado encontrado para Apple Inc. no período padrão.`);
+                    setFilterMessage(`Nenhum dado encontrado para Apple no período padrão.`);
                 }
                 setData(response.data);
             } catch (error) {

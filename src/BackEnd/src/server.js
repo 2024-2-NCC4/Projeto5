@@ -218,6 +218,7 @@ app.get('/simbolos/:ramo', (req, res) => {
   });
 });
 
+
 // Endpoint para consulta filtrada
 app.get('/query', (req, res) => {
   const { ramo, simbolo, data_inicio, data_final } = req.query;
@@ -228,7 +229,7 @@ app.get('/query', (req, res) => {
 
   // Montar a query usando STR_TO_DATE para comparar as datas corretamente
   const query = `
-      SELECT Data, Fechamento
+      SELECT Data, Fechamento, Simbolo, Ramo
       FROM Dados 
       WHERE Ramo = ? 
         AND Simbolo = ? 
@@ -237,6 +238,47 @@ app.get('/query', (req, res) => {
 
   // Executar a query
   db.query(query, [ramo, simbolo, data_inicio, data_final], (err, results) => {
+      if (err) {
+          console.error('Erro ao executar a consulta:', err);
+          return res.status(500).send('Erro no servidor ao executar a consulta.');
+      }
+
+      return res.json(results);
+  });
+});
+
+
+app.get('/query2', (req, res) => {
+  const { ramo, simbolos, data_inicio, data_final } = req.query;
+
+  if (!ramo || !simbolos || !data_inicio || !data_final) {
+      return res.status(400).send('Todos os parâmetros são necessários: ramo, simbolos, data_inicio e data_final.');
+  }
+
+  // Converter 'simbolos' em um array se for uma string
+  let listaSimbolos = [];
+  if (typeof simbolos === 'string') {
+      listaSimbolos = simbolos.split(',');
+  } else if (Array.isArray(simbolos)) {
+      listaSimbolos = simbolos;
+  } else {
+      return res.status(400).send('O parâmetro simbolos deve ser uma string ou um array.');
+  }
+
+  // Criar placeholders para os símbolos
+  const placeholders = listaSimbolos.map(() => '?').join(', ');
+
+  const query = `
+      SELECT Data, Fechamento_Padronizado, Simbolo, Ramo
+      FROM Dados 
+      WHERE Ramo = ? 
+        AND Simbolo IN (${placeholders})
+        AND STR_TO_DATE(Data, '%d.%m.%Y') BETWEEN STR_TO_DATE(?, '%d.%m.%Y') AND STR_TO_DATE(?, '%d.%m.%Y')
+  `;
+
+  const params = [ramo, ...listaSimbolos, data_inicio, data_final];
+
+  db.query(query, params, (err, results) => {
       if (err) {
           console.error('Erro ao executar a consulta:', err);
           return res.status(500).send('Erro no servidor ao executar a consulta.');

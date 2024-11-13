@@ -1,1 +1,6 @@
+# Ignore ambiente virtual
 venv/
+
+# Ignore arquivos temporários do Python
+__pycache__/
+*.py[cod]
