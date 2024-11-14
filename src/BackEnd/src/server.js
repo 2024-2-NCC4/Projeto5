@@ -269,7 +269,7 @@ app.get('/query2', (req, res) => {
   const placeholders = listaSimbolos.map(() => '?').join(', ');
 
   const query = `
-      SELECT Data, Fechamento_Padronizado, Simbolo, Ramo
+      SELECT Data, Fechamento, Fechamento_Padronizado, Simbolo, Ramo
       FROM Dados 
       WHERE Ramo = ? 
         AND Simbolo IN (${placeholders})
