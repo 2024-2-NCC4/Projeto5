@@ -85,41 +85,60 @@ app.layout = dbc.Container([
     # Gráficos adicionais
     dbc.Row(dbc.Col([
         dcc.Graph(figure=fig_crescimento_medio_anual),
-        html.Div("Análise de crescimento médio anual por setor...", className="mt-2 mb-4")
+        html.Div("O gráfico apresenta o crescimento médio anual por setor de 2014 a 2023. Cada linha representa um setor econômico, com o eixo horizontal mostrando os anos e o eixo vertical indicando o crescimento médio anual. Observa-se uma variação moderada entre os setores ao longo do tempo. ", className="mt-2 mb-4")
     ])),
 
     dbc.Row(dbc.Col([
         dcc.Graph(figure=fig_crescimento_previsoes),
-        html.Div("Projeções de crescimento médio anual com previsões...", className="mt-2 mb-4")
+       html.Div([
+            html.P("Tendência de Crescimento Estável: Os dados previstos mostram um crescimento leve e estável, em contraste com a volatilidade observada nos dados reais."),
+            html.P("Divergência no Setor de Contratos Futuros: O setor de contratos futuros exibe um crescimento muito acentuado nas previsões, o que pode indicar uma falha no modelo, pois esse setor tende a ser volátil e é improvável que mantenha um crescimento constante."),
+            html.P("Crescimento Uniforme entre Setores: O modelo parece suavizar os dados, prevendo um crescimento semelhante para todos os setores. Essa expectativa de uniformidade pode ser irrealista, considerando as diferenças características entre cada setor.")
+        ], className="mt-2 mb-4")
     ])),
 
     html.Hr(),
 
     dbc.Row(dbc.Col([
         dcc.Graph(figure=fig_grau_influencia),
-        html.Div("Gráfico de grau de influência entre setores...", className="mt-2 mb-4")
+        html.Div([
+            html.P("Setores Influentes: O setor de petróleo é classificado como o mais influente, pois suas flutuações, apesar da correlação negativa, têm grande impacto em outros setores devido à sua importância econômica."),
+            html.P("Setores Influenciáveis: O setor automotivo é o mais influenciável, com alta correlação positiva com outros setores, refletindo sua sensibilidade e dependência das mudanças econômicas."),
+            html.P("Setores Independentes: O setor de Equipamentos Industriais demonstra relativa independência, com correlação mediana com os outros setores, indicando menor sensibilidade às flutuações dos mercados.")
+        ], className="mt-2 mb-4")
+
     ])),
 
     dbc.Row(dbc.Col([
         dcc.Graph(figure=fig_matriz_correlacao),
-        html.Div("Matriz de correlação entre os setores...", className="mt-2 mb-4")
+        html.Div([
+            html.P("Crescimento Econômico e Setores Correlacionados: Setores como mídia/entretenimento e mercado imobiliário tendem a crescer simultaneamente em períodos de alta econômica. Isso ocorre porque, com mais investimentos e consumo de lazer, ambos se beneficiam diretamente do aumento no poder aquisitivo e no apetite por investimentos."),
+            html.P("Influência Externa no Setor de Petróleo: O petróleo, por ser uma commodity global, é fortemente afetado por fatores externos, como geopolítica e políticas de energia. Esses elementos externos o tornam menos dependente de flutuações internas, fazendo com que seu desempenho se distancie do de outros setores."),
+            html.P("Sensibilidade do Setor Financeiro e Conexão da Tecnologia com o Mercado: O setor de serviços financeiros reage rapidamente às variações econômicas gerais, refletindo a saúde econômica do mercado como um todo, já que bancos e seguradoras dependem de resultados positivos em outros setores. Já a tecnologia está altamente conectada com índices de mercado e consumo de mídia, impulsionada pela sua influência nas bolsas de valores e pelo crescente uso de tecnologias para entretenimento e consumo de mídia.")
+        ], className="mt-2 mb-4")
     ])),
 
     html.Hr(),
 
     dbc.Row(dbc.Col(html.H2("Tabela de Correlação e Beta por Setor", className="text-center mt-4"))),
 
-    dbc.Row(dbc.Col(
-        dash_table.DataTable(
-            columns=[{"name": i, "id": i} for i in df_tabela_final.columns],
-            data=df_tabela_final.to_dict("records"),
-            style_table={"width": "80%", "margin": "auto"},
-            style_cell={'textAlign': 'center', 'padding': '5px'},
-            style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'}
-        ), width=12
-        )
-    ),html.Div("Matriz de correlação entre os setores...", className="mt-2 mb-4"),
+    dbc.Row(
+    dbc.Col([
+        html.Div([
+            dash_table.DataTable(
+                columns=[{"name": i, "id": i} for i in df_tabela_final.columns],
+                data=df_tabela_final.to_dict("records"),
+                style_table={"width": "80%", "margin": "auto"},
+                style_cell={'textAlign': 'center', 'padding': '5px'},
+                style_header={'backgroundColor': 'rgb(230, 230, 230)', 'fontWeight': 'bold'}
+            ),
+            html.P("Correlação e Sensibilidade ao Mercado: O valor da correlação reflete o grau de relação de cada setor com os índices do mercado, enquanto o Beta indica a sensibilidade desses setores a mudanças. A maioria das correlações é positiva, mostrando que o mercado se move geralmente na mesma direção, com Betas próximos ou abaixo de 1, sugerindo uma volatilidade moderada ou abaixo da média."),
+            html.P("Setor de Tecnologia: Apresenta a maior correlação e um Beta consideravelmente alto, demonstrando uma alta sensibilidade às mudanças de sentimento no mercado. Esse comportamento é explicado pela percepção do setor como motor de crescimento futuro, refletindo rapidamente otimismo ou pessimismo econômico."),
+            html.P("Setor de Commodities: Possui a menor correlação e o Beta mais baixo, devido à influência predominante de fatores globais, como mercados internacionais e condições macroeconômicas. Além disso, commodities são vistas como hedge contra a inflação, atraindo investidores em momentos distintos do mercado geral.")
+        ], className="mt-4 mb-4")
+     ]))
 ])
+
 
 # Callback para atualizar a lista de "Nomes" com base no "Ramo" selecionado
 @app.callback(
