@@ -23,6 +23,7 @@ StockSorter é uma ferramenta de analise de mercado, nosso objetivo é realizar 
 
 ## 🛠 Estrutura de pastas
 
+\```
 /
 ├── documentos/
 │   ├── Dados/
@@ -34,7 +35,8 @@ StockSorter é uma ferramenta de analise de mercado, nosso objetivo é realizar 
 │   ├── BackEnd/
 │   ├── FrontEnd/
 │   └── Scripts/
-├── README.md  
+└── README.md
+\```
 
 A pasta raiz contém um arquivo que deve ser alterado:
 
