@@ -23,59 +23,33 @@ StockSorter é uma ferramenta de analise de mercado, nosso objetivo é realizar 
 
 ## 🛠 Estrutura de pastas
 
--Raiz<br>
-|<br>
-|-->documentos<br>
-  &emsp;|-->antigos<br>
-  &emsp;|Documentação.docx<br>
-|-->executáveis<br>
-  &emsp;|-->windows<br>
-  &emsp;|-->android<br>
-  &emsp;|-->HTML<br>
-|-->imagens<br>
-|-->src<br>
-  &emsp;|-->Backend<br>
-  &emsp;|-->Frontend<br>
-|readme.md<br>
+/
+├── documentos/
+│   ├── Dados/
+│   ├── Entrega 1/
+│   ├── Entrega 2/
+│   ├── Entrega 3/
+│   └── Entrega 4/
+├── src/
+│   ├── BackEnd/
+│   ├── FrontEnd/
+│   └── Scripts/
+├── README.md  
 
-A pasta raiz contem dois arquivos que devem ser alterados:
+A pasta raiz contém um arquivo que deve ser alterado:
 
-<b>README.MD</b>: Arquivo que serve como guia e explicação geral sobre seu projeto. O mesmo que você está lendo agora.
+<b>README.md</b>: Arquivo que serve como guia e explicação geral sobre o projeto. O mesmo que você está lendo agora.
 
-Há também 4 pastas que seguem da seguinte forma:
+Há também 2 pastas que seguem da seguinte forma:
 
 <b>documentos</b>: Toda a documentação estará nesta pasta.
+<b>Dados</b>: Contém dados brutoa e processados.
+<b>Entrega 1</b>, <b>Entrega 2</b>, <b>Entrega 3</b>, <b>Entrega 4</b>: Subpastas específicas para cada entrega.
 
-<b>executáveis</b>: Binários e executáveis do projeto devem estar nesta pasta.
-
-<b>imagens</b>: Imagens do sistema
-
-<b>src</b>: Pasta que contém o código fonte.
-
-## 🛠 Instalação
-
-<b>Android:</b>
-
-Faça o Download do JOGO.apk no seu celular.
-Execute o APK e siga as instruções de seu telefone.
-
-```sh
-Coloque código do prompt de comnando se for necessário
-```
-
-<b>Windows:</b>
-
-Não há instalação! Apenas executável!
-Encontre o JOGO.exe na pasta executáveis e execute-o como qualquer outro programa.
-
-```sh
-Coloque código do prompt de comnando se for necessário
-```
-
-<b>HTML:</b>
-
-Não há instalação!
-Encontre o index.html na pasta executáveis e execute-o como uma página WEB (através de algum browser).
+<b>src</b>: Pasta que contém o código-fonte.
+<b>BackEnd</b>: servidor do projeto
+<b>FrontEnd</b>: dashboard.
+<b>Scripts</b>: Scripts de análise.
 
 ## 💻 Configuração para Desenvolvimento
 
