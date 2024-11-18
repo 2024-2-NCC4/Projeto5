@@ -23,22 +23,7 @@ StockSorter é uma ferramenta de analise de mercado, nosso objetivo é realizar 
 
 ## 🛠 Estrutura de pastas
 
-\```
-/
-├── documentos/
-│   ├── Dados/
-│   ├── Entrega 1/
-│   ├── Entrega 2/
-│   ├── Entrega 3/
-│   └── Entrega 4/
-├── src/
-│   ├── BackEnd/
-│   ├── FrontEnd/
-│   └── Scripts/
-└── README.md
-\```
-
-A pasta raiz contém um arquivo que deve ser alterado:
+Raiz<br> |<br> |-->documentos<br>     |-->Dados<br>     |-->Entrega 1<br>     |-->Entrega 2<br>     |-->Entrega 3<br>     |-->Entrega 4<br> |-->src<br>     |-->BackEnd<br>     |-->FrontEnd<br>     |-->Scripts<br> |-->README.md<br>A pasta raiz contém um arquivo que deve ser alterado:
 
 <b>README.md</b>: Arquivo que serve como guia e explicação geral sobre o projeto. O mesmo que você está lendo agora.
 
